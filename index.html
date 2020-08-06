@@ -5,13 +5,54 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title></title>
 	<link rel="stylesheet" href="">
+
+	<style type="text/css" media="screen">
+		.color-red {
+			color: red;
+		}
+
+		.is-loading {
+			background-color: red;
+		}
+	</style>
 </head>
 <body>
 
 	<div id="root">
 		<input type="text" id="input" v-model="message">
 
-		<p>The message was {{ message }}</p>
+		<p :class="className">The message was {{ message }}</p>
+
+		<ul>
+			<li v-for="name in names" v-text="name"></li>
+		</ul>
+
+		<input id="input" type="text" v-model="newName" v-on:keyUp="addName()">
+
+		<button @click="addName()" v-bind:title="title">Add Name</button>
+
+		<button :class="{'is-loading' : isLoading}" @click="toggleClass">Click me</button>
+
+
+		<h2>All Tasks</h2>
+
+		<ul>
+			<li v-for="task in tasks" v-text="task.description"></li>
+		</ul>
+
+		<h2>Incomplete Task</h2>
+
+		<ul>
+			<li v-for="task in incompleteTasks" v-text="task.description"></li>
+		</ul>
+
+	<!-- 	<task>wew</task>
+		<task>wews</task> -->
+
+		<task-list></task-list>
+
+		<message title="this is the title" body="this is the body"></message>
+
 	</div>
 
 	<!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
@@ -22,11 +63,49 @@
 		new Vue({
 			el: '#root',
 			data: {
-				message: 'Hello World'
+				message: 'Hello World',
+				newName: '',
+				names: ['Joe', 'Mary', 'Jane', 'Jack'],
+				title: 'this is the title',
+				className: 'color-red',
+				isLoading: false,
+				tasks: [
+					{description: 'Sample task 1', completed: true},
+					{description: 'Sample task 2', completed: false},
+					{description: 'Sample task 3', completed: true},
+					{description: 'Sample task 4', completed: false},
+					{description: 'Sample task 5', completed: true},
+					{description: 'Sample task 6', completed: false}
+				]
+			},
+
+			methods: {
+
+				addName() {
+					this.names.push(this.newName);
+
+					this.newName = '';
+				},
+
+				toggleClass() {
+
+					this.isLoading = true;
+				}
+
+			},
+
+			computed: {
+
+				incompleteTasks() {
+					return this.tasks.filter(task => ! task.completed)
+				}
 			}
 		})
 
 	</script>
+
+
+	<script src="./main.js"></script>
 	
 </body>
 </html>
